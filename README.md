@@ -45,35 +45,55 @@ backend/src/main/resources/firebase-service-account.json
 
 ## How to Run
 
+## Project Structure
+```text
+toptri/
+│
+├── backend/ # Java Spring Boot backend
+│ ├── src/main/java/com/toptri
+│ ├── src/main/resources
+│ └── pom.xml
+│
+├── frontend/ # Simple HTML/CSS/JS frontend
+│ ├── index.html
+│ ├── app.js
+│ └── style.css
+│
+├── .gitignore
+└── README.md
+```
 ### 1. Run Backend
-
+```
 bash
 cd backend
 mvn spring-boot:run
 backend runs on
 http://localhost:8080
-
+```
 --- 
 ### 2. Run Frontend
-
+```
 cd frontend
 python -m http.server 5500
 Open browser:
 http://localhost:5500
+```
+
 
 
 ### Example Commands
+```
 - nasi padang
 - something sweet
 - nasi padang max 17000
 - best offer now
 - best offer in nasi padang
-
+```
 ### Notes
-
+```
 - Backend must be running before frontend
 - If frontend shows Failed to fetch, backend is not running
 - Change API URL in frontend/app.js if backend port changes
 - Firebase service account key is ignored using .gitignore
-
+```
 
