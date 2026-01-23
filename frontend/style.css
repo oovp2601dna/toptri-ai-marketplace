@@ -1,0 +1,39 @@
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui;background:#0e1118;color:#e8eefc}
+.wrap{max-width:720px;margin:0 auto;padding:16px}
+.top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;
+  border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:12px;background:rgba(255,255,255,.03)}
+.brand{font-weight:900;font-size:20px}
+.sub{font-size:12px;color:#9aa8c7;margin-top:2px}
+.pr{display:flex;gap:8px;flex-wrap:wrap;font-size:12px;color:#9aa8c7}
+.pr label{padding:6px 10px;border:1px solid rgba(255,255,255,.12);border-radius:999px;background:rgba(255,255,255,.02)}
+.log{margin-top:12px;min-height:420px;display:flex;flex-direction:column;gap:10px}
+.msg{border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(0,0,0,.18);padding:12px}
+.badge{display:inline-block;font-size:11px;padding:4px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.12);color:#9aa8c7;margin-right:6px}
+.ok{border-color:rgba(34,197,94,.35);background:rgba(34,197,94,.10);color:#bff7d2}
+.bar{display:flex;gap:10px;margin-top:12px}
+.bar input{flex:1;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.03);color:#e8eefc;outline:none}
+.bar button{padding:12px 14px;border-radius:12px;border:1px solid rgba(34,197,94,.35);background:rgba(34,197,94,.14);color:#e8eefc;font-weight:900;cursor:pointer}
+.buy-btn{
+  padding:8px 14px;
+  border-radius:10px;
+  border:1px solid rgba(34,197,94,.45);
+  background:rgba(34,197,94,.18);
+  color:#eafff1;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.buy-btn:hover{
+  background:rgba(34,197,94,.35);
+}
+#bestBtn{
+  padding:12px 14px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.06);
+  color:#e8eefc;
+  font-weight:900;
+  cursor:pointer;
+}
+#bestBtn:hover{ background:rgba(255,255,255,.10); }

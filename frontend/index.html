@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Toptri Chat</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <div class="brand">Toptri</div>
+        <div class="sub">Chatbot + rekomendasi (Java backend)</div>
+      </div>
+      <div class="pr">
+        <label><input id="c1" type="checkbox" checked> cheapest</label>
+        <label><input id="c2" type="checkbox" checked> fastest</label>
+        <label><input id="c3" type="checkbox"> sweet</label>
+        <label><input id="c4" type="checkbox"> simple</label>
+      </div>
+    </div>
+
+    <div id="log" class="log"></div>
+
+  <form id="form" class="bar">
+  <input id="inp" placeholder='contoh: "something sweet" / "nasi padang max 17000"' />
+  <button type="button" id="bestBtn">Best Offer Now</button>
+  <button type="submit">Send</button>
+</form>
+
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>

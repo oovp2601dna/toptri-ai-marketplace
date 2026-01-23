@@ -1,0 +1,20 @@
+# Java / Maven
+backend/target/
+*.class
+
+# Firebase secret (WAJIB)
+firebase-service-account.json
+**/firebase-service-account.json
+**/firebase-service-account.json.json
+
+# Node (kalau ada)
+node_modules/
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
