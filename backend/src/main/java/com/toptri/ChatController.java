@@ -2,19 +2,37 @@ package com.toptri;
 
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = {"http://localhost:5500"})
 @RestController
-@RequestMapping("/api")
+@CrossOrigin(origins = "*")
 public class ChatController {
 
-  private final ChatService svc;
-  public ChatController(ChatService svc){ this.svc = svc; }
+  private final ChatService chatService;
 
-  @GetMapping("/health")
-  public String health(){ return "ok"; }
+  // ✅ inject ChatService (Spring will auto-wire)
+  public ChatController(ChatService chatService) {
+    this.chatService = chatService;
+  }
 
-  @PostMapping("/chat")
+  // =========================
+  // BUYER: chat
+  // =========================
+  @PostMapping("/api/chat")
   public ChatRes chat(@RequestBody ChatReq req) throws Exception {
-    return svc.chat(req);
+    return chatService.chat(req);
+  }
+
+  // =========================
+  // SELLER: add offer
+  // =========================
+  @PostMapping("/api/offers")
+  public String createOffer(@RequestBody OfferReq req) throws Exception {
+    // return id biar gampang debug
+    return chatService.saveOffer(req);
+  }
+
+  // (optional) health check
+  @GetMapping("/api/health")
+  public String health() {
+    return "OK";
   }
 }
