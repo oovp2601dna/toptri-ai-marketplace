@@ -128,24 +128,28 @@ class SellerApi {
 }
 
 /** ===================== MAIN WINDOW ===================== */
+/** ===================== MAIN WINDOW (UPDATED) ===================== */
+/** ===================== MAIN WINDOW (UPDATED WITH SCORE) ===================== */
 class ChatWindow extends JFrame {
     private final JPanel chatContainer = new JPanel();
     private final JTextField mainInput = new JTextField();
+    
+    // Input Fields untuk fleksibilitas
+    private final JTextField vendorInput = new JTextField("Seller B", 8);
+    private final JTextField priceInput = new JTextField("10000", 6);
+    private final JTextField scoreInput = new JTextField("42.0", 5); // Input Score Baru
 
-    // backend base URL
     private final SellerApi api = new SellerApi("http://localhost:8080");
 
-    // default seller values (simple dulu biar jalan)
-    private final String defaultVendor = "Seller A";
-    private final double defaultPrice = 15000;
-    private final int defaultEtaMin = 20;
+    // Defaults lainnya
+    private final int defaultEtaMin = 10;
     private final int defaultSweet = 0;
     private final int defaultSimple = 2;
     private final boolean defaultActive = true;
 
     public ChatWindow() {
         setTitle("Multi-Button Interaction GUI (Seller -> Backend)");
-        setSize(650, 720);
+        setSize(700, 750); // Ukuran sedikit diperlebar
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
@@ -163,16 +167,38 @@ class ChatWindow extends JFrame {
     }
 
     private JPanel createBottomBar() {
-        JPanel bar = new JPanel(new BorderLayout(10, 0));
-        bar.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        JPanel mainBottomPanel = new JPanel();
+        mainBottomPanel.setLayout(new BoxLayout(mainBottomPanel, BoxLayout.Y_AXIS));
+        mainBottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
+        // Row Pengaturan: Vendor, Price, dan Score
+        JPanel settingsRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        settingsRow.add(new JLabel("Seller:"));
+        settingsRow.add(vendorInput);
+        
+        settingsRow.add(Box.createRigidArea(new Dimension(10, 0)));
+        settingsRow.add(new JLabel("Price:"));
+        settingsRow.add(priceInput);
+
+        settingsRow.add(Box.createRigidArea(new Dimension(10, 0)));
+        settingsRow.add(new JLabel("Score:"));
+        settingsRow.add(scoreInput); // Menambahkan kotak score ke UI
+        
+        // Row Chat
+        JPanel chatRow = new JPanel(new BorderLayout(10, 0));
+        chatRow.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        
         JButton sendBtn = new JButton("Send Message");
         sendBtn.addActionListener(e -> postMessage());
         mainInput.addActionListener(e -> postMessage());
 
-        bar.add(mainInput, BorderLayout.CENTER);
-        bar.add(sendBtn, BorderLayout.EAST);
-        return bar;
+        chatRow.add(mainInput, BorderLayout.CENTER);
+        chatRow.add(sendBtn, BorderLayout.EAST);
+
+        mainBottomPanel.add(settingsRow);
+        mainBottomPanel.add(chatRow);
+        
+        return mainBottomPanel;
     }
 
     private void postMessage() {
@@ -180,8 +206,6 @@ class ChatWindow extends JFrame {
         if (msg.isEmpty()) return;
 
         Message message = new Message(msg, 3);
-
-        // one handler for this message
         InputRow.SaveHandler handler = (rowNumber, content) -> handleSave(message, rowNumber, content);
 
         chatContainer.add(new MessageBlock(message, handler));
@@ -191,65 +215,55 @@ class ChatWindow extends JFrame {
         chatContainer.repaint();
         mainInput.setText("");
 
-        // auto scroll bottom
         SwingUtilities.invokeLater(() -> {
             JScrollBar vertical = ((JScrollPane) chatContainer.getParent().getParent()).getVerticalScrollBar();
             vertical.setValue(vertical.getMaximum());
         });
     }
 
-    /**
-     * ✅ FINAL STEP 4 behavior:
-     * - seller types ONLY menu name (example: "Nasi Rendang")
-     * - category is taken from buyer message (example: "nasi padang")
-     * - send to backend /api/offers (backend saves to Firebase)
-     */
     private void handleSave(Message message, int rowNumber, String content) {
         if (content == null || content.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Row " + rowNumber + " is empty!");
+            JOptionPane.showMessageDialog(this, "Input " + rowNumber + " kosong!");
             return;
         }
 
-        // 1) store to model (OOP point)
+        // Ambil data dari semua input field
         String item = content.trim();
+        String currentVendor = vendorInput.getText().trim();
+        String currentPrice = priceInput.getText().trim().replace(".", ""); // Bersihkan titik
+        String currentScore = scoreInput.getText().trim(); // Ambil nilai score
+        
         message.setRowInput(rowNumber - 1, item);
-
-        // 2) derive category from buyer message
-        String category = message.getUserMessage().trim(); // example: "nasi padang"
+        String category = message.getUserMessage().trim();
         if (category.isEmpty()) category = "unknown";
 
-        // 3) build JSON for backend OfferReq
+        // Susun JSON dengan menyertakan field "score"
         String json = "{"
                 + "\"item\":\"" + escJson(item) + "\","
-                + "\"vendor\":\"" + escJson(defaultVendor) + "\","
+                + "\"vendor\":\"" + escJson(currentVendor) + "\","
                 + "\"category\":\"" + escJson(category) + "\","
-                + "\"price\":" + defaultPrice + ","
+                + "\"price\":" + currentPrice + ","
+                + "\"score\":" + currentScore + "," // Score dikirim ke backend
                 + "\"etaMin\":" + defaultEtaMin + ","
                 + "\"sweet\":" + defaultSweet + ","
                 + "\"simple\":" + defaultSimple + ","
                 + "\"active\":" + defaultActive
                 + "}";
 
-        // 4) POST to backend (do in background thread so UI not freeze)
-        final String showCategory = category;
         new Thread(() -> {
             try {
                 api.createOffer(json);
-
                 SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(
                         this,
-                        "✅ Uploaded to backend!\n\n"
-                                + "Buyer keyword/category: " + showCategory + "\n"
+                        "✅ Berhasil Upload!\n\n"
                                 + "Item: " + item + "\n"
-                                + "Vendor: " + defaultVendor + "\n"
-                                + "Price: " + (int)defaultPrice + "\n"
-                                + "ETA: " + defaultEtaMin + " min"
+                                + "Vendor: " + currentVendor + "\n"
+                                + "Price: Rp " + currentPrice + "\n"
+                                + "Score: " + currentScore
                 ));
-
             } catch (Exception ex) {
                 SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(
-                        this,
-                        "❌ Upload failed:\n" + ex.getMessage()
+                        this, "❌ Gagal Upload:\n" + ex.getMessage()
                 ));
             }
         }).start();

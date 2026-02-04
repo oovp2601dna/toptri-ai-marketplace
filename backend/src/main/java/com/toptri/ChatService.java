@@ -157,19 +157,7 @@ public class ChatService {
     Long v = d.getLong(k);
     return (v == null) ? 0L : v;
   }
-  public void saveOffer(OfferReq req) throws Exception {
-  Map<String, Object> data = new HashMap<>();
-  data.put("active", true);
-  data.put("vendor", req.vendor);
-  data.put("item", req.item);
-  data.put("category", req.category);
-  data.put("price", req.price);
-  data.put("etaMin", req.etaMin);
-  data.put("sweet", req.sweet);
-  data.put("simple", req.simple);
-  data.put("createdAt", FieldValue.serverTimestamp());
-
-  db().collection("offers").add(data).get();
+  
 }
 
-}
+
